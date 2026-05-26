@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FATE_TOOL // QR_Code_Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #f4f5f7;
+            --surface: #ffffff;
+            --text-main: #111215;
+            --text-muted: #5c6470;
+            --orange-neon: #ff5500;
+            --border-tech: #dcdfe5;
+            --button-back: #656161;
+            --font-scifi: 'Orbitron', sans-serif;
+        }
+
+        body { 
+            background-color: var(--bg); 
+            background-image: radial-gradient(var(--border-tech) 1px, transparent 1px); 
+            background-size: 20px 20px; 
+            color: var(--text-main); 
+            font-family: var(--font-scifi); 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 3rem 2rem; 
+        }
+
+        .back-btn { 
+            position: absolute; 
+            top: 2.5rem; 
+            right: 2rem; 
+            background-color: var(--orange-neon); 
+            color: #ffffff; 
+            text-decoration: none; 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            padding: 0.6rem 1.8rem; 
+            clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
+            transition: transform 0.2s;
+        }
+        .back-btn:hover { transform: translateY(-2px); }
+
+        header { text-align: left; margin-bottom: 4rem; border-left: 3px solid var(--orange-neon); padding-left: 1.5rem; }
+        h1 { font-size: 2.2rem; font-weight: 900; margin: 0; text-transform: uppercase; letter-spacing: -1px; }
+
+        .container { 
+            max-width: 550px; 
+            margin: 2rem auto; 
+            background: var(--surface); 
+            border: 1px solid var(--border-tech); 
+            padding: 3rem; 
+            clip-path: polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%); 
+            text-align: center; 
+        }
+
+        .container h2 { font-size: 1rem; color: var(--orange-neon); margin-bottom: 1rem; }
+
+        textarea { 
+            width: 100%; 
+            background: #f9f9f9; 
+            border: 1px solid var(--border-tech); 
+            color: var(--text-main); 
+            font-family: var(--font-scifi); 
+            padding: 1rem; 
+            box-sizing: border-box; 
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            resize: none;
+            text-align: center;
+        }
+
+        #qrcode { 
+            background: #fff; 
+            padding: 1rem; 
+            display: inline-block; 
+            border: 1px solid var(--border-tech);
+            margin-bottom: 1.5rem;
+        }
+        
+        #qrcode img { display: block; }
+
+        .ctrl-btn { 
+            background-color: var(--button-back); 
+            color: #ffffff; 
+            border: 0px solid var(--text-main); 
+            font-family: var(--font-scifi); 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            padding: 1rem 2rem; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            width: 100%; 
+            clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%); 
+        }
+        .ctrl-btn:hover { background-color: var(--orange-neon); border-color: var(--orange-neon); }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+    <a href="index.html" class="back-btn">← DASHBOARD</a>
+
+    <header>
+        <h1>FATE_TOOL // QR_Code_Generator</h1>
+        <p style="color: var(--text-muted);">MODULE: [ NET_03 ] // SYSTEM: READY</p>
+    </header>
+    
+    <div class="container">
+        <h2>[ GENERATE_ENCODING ]</h2>
+        <textarea id="text" placeholder="PASTE_LINK_OR_TEXT" oninput="makeQR()"></textarea>
+        <div id="qrcode"></div>
+        <button class="ctrl-btn" onclick="saveQR()">SAVE_TO_DISK</button>
+    </div>
+
+    <script>
+        const qrcode = new QRCode(document.getElementById("qrcode"), { width: 180, height: 180 });
+        
+        function makeQR() {
+            const val = document.getElementById('text').value;
+            if (!val) { qrcode.clear(); return; }
+            qrcode.makeCode(val);
+        }
+
+        function saveQR() {
+            const qrImage = document.querySelector("#qrcode img");
+            if (!qrImage) return;
+            
+            const link = document.createElement('a');
+            link.download = 'FATE_QR.png';
+            link.href = qrImage.src;
+            link.click();
+        }
+
+        // Initial state
+        qrcode.makeCode("https://github.com");
+    </script>
+</body>
+</html>

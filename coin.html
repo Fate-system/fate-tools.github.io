@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FATE_TOOL // COIN_FLIPPER</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #f4f5f7;
+            --surface: #ffffff;
+            --text-main: #111215;
+            --text-muted: #5c6470;
+            --orange-neon: #ff5500;
+            --border-tech: #dcdfe5;
+            --tail: #9a9ca0;
+            --font-scifi: 'Orbitron', sans-serif;
+        }
+
+        body { 
+            background-color: var(--bg); 
+            background-image: radial-gradient(var(--border-tech) 1px, transparent 1px); 
+            background-size: 20px 20px; 
+            color: var(--text-main); 
+            font-family: var(--font-scifi); 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 3rem 2rem; 
+        }
+
+        .back-btn { 
+            position: absolute; 
+            top: 2.5rem; 
+            right: 2rem; 
+            background-color: var(--orange-neon); 
+            color: #ffffff; 
+            text-decoration: none; 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            padding: 0.6rem 1.8rem; 
+            clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
+            transition: transform 0.2s;
+        }
+        .back-btn:hover { transform: translateY(-2px); }
+
+        header { text-align: left; margin-bottom: 3rem; border-left: 3px solid var(--orange-neon); padding-left: 1.5rem; }
+        h1 { font-size: 2.2rem; font-weight: 900; margin: 0; text-transform: uppercase; letter-spacing: -1px; }
+
+        .container { 
+            max-width: 550px; 
+            margin: 0 auto; 
+            background: var(--surface); 
+            border: 1px solid var(--border-tech); 
+            padding: 2.5rem; 
+            clip-path: polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%); 
+            text-align: center; 
+        }
+
+        .container h2 { font-size: 1rem; color: var(--orange-neon); margin-bottom: 0.5rem; }
+
+        .coin-wrapper { perspective: 1000px; margin: 2rem auto; width: 120px; height: 120px; cursor: pointer; }
+        .coin { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .side { position: absolute; width: 100%; height: 100%; border-radius: 50%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.8rem; border: 4px solid var(--border-tech); box-sizing: border-box; }
+        .heads { background: var(--orange-neon); color: #ffffff; }
+        .tails { background: var(--tail); color: var(--text-main); transform: rotateY(180deg); }
+
+        .stats { margin-top: 2rem; display: flex; justify-content: space-around; border-top: 1px solid var(--border-tech); padding-top: 1.5rem; }
+        .stat-val { font-size: 1.5rem; color: var(--orange-neon); font-weight: 900; display: block; }
+    </style>
+</head>
+<body>
+
+   <a href="index.html" class="back-btn"><span>← DASHBOARD</span></a>
+
+    <header>
+        <h1>FATE_TOOL // COIN_FLIPPER</h1>
+        <p style="color: var(--text-muted);">MODULE: [ MATH_06 ] // SYSTEM: READY</p>
+    </header>
+    
+    <div class="container">
+        <h2>[ EXECUTE_FLIP ]</h2>
+        <p style="color: var(--text-muted); font-size: 0.7rem; font-weight: 700;">ACTIVATE_COIN_TO_FLIP</p>
+        
+        <div class="coin-wrapper" onclick="flipCoin()">
+            <div class="coin" id="coin">
+                <div class="side heads">HEADS</div>
+                <div class="side tails">TAILS</div>
+            </div>
+        </div>
+
+        <h3 id="result-text" style="font-size: 1rem; height: 24px;">IDLE_STATE</h3>
+        
+        <div class="stats">
+            <div>HEADS <span class="stat-val" id="h-count">0</span></div>
+            <div>TAILS <span class="stat-val" id="t-count">0</span></div>
+        </div>
+    </div>
+
+    <script>
+        let h = 0, t = 0, currentRotation = 0;
+        function flipCoin() {
+            const coin = document.getElementById('coin');
+            const isHeads = Math.random() < 0.5;
+            currentRotation += 1800 + (isHeads ? 0 : 180);
+            coin.style.transform = `rotateY(${currentRotation}deg)`;
+            
+            document.getElementById('result-text').innerText = "CALCULATING...";
+            
+            setTimeout(() => {
+                if (isHeads) {
+                    h++;
+                    document.getElementById('result-text').innerText = "RESULT: HEADS";
+                    document.getElementById('h-count').innerText = h;
+                } else {
+                    t++;
+                    document.getElementById('result-text').innerText = "RESULT: TAILS";
+                    document.getElementById('t-count').innerText = t;
+                }
+            }, 600);
+        }
+    </script>
+</body>
+</html>

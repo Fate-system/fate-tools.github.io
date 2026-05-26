@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cipher Machine</title>
+    <style>
+        body { background: #0f0f11; color: #e1e1e6; font-family: sans-serif; text-align: center; padding: 2rem; }
+        .back { display: inline-block; margin-bottom: 2rem; color: #72f1b8; text-decoration: none; }
+        .container { max-width: 550px; margin: 0 auto; background: #16161a; padding: 2rem; border-radius: 12px; border: 1px solid #2d2d34; text-align: left; }
+        select, input[type=text], textarea { width: 100%; background: #2d2d34; border: 1px solid #444; color: #fff; padding: 0.6rem; border-radius: 6px; box-sizing: border-box; font-size: 1rem; margin-top: 0.5rem; margin-bottom: 1.2rem; }
+        textarea { height: 100px; resize: vertical; }
+        .flex-row { display: flex; gap: 1rem; }
+        .flex-child { flex: 1; }
+        h3 { margin-bottom: 0.25rem; margin-top: 0; color: #fff; }
+    </style>
+</head>
+<body>
+   <a href="index.html" class="back-btn"><span>← DASHBOARD</span></a>
+    <div class="container">
+        <h2 style="text-align: center; margin-top: 0;">🔒 Caesar & Vigenère Cipher Engine</h2>
+        
+        <div class="flex-row">
+            <div class="flex-child">
+                <label>Select Cipher Algorithm</label>
+                <select id="cipher-type" onchange="runCipher()">
+                    <option value="caesar">Caesar Shift</option>
+                    <option value="vigenere">Vigenère Cipher</option>
+                </select>
+            </div>
+            <div class="flex-child">
+                <label id="key-label">Numeric Shift Value</label>
+                <input type="text" id="cipher-key" value="3" oninput="runCipher()">
+            </div>
+        </div>
+
+        <label>Input Text String</label>
+        <textarea id="raw-text" placeholder="Type secret message here..." oninput="runCipher()"></textarea>
+
+        <h3>Resulting Encrypted Output:</h3>
+        <textarea id="encrypted-text" readonly placeholder="Encrypted outcome will output here..."></textarea>
+        
+        <h3>Decrypted Verification Output:</h3>
+        <textarea id="decrypted-text" readonly placeholder="Reverse parsed outcome calculation..."></textarea>
+    </div>
+
+    <script>
+        function runCipher() {
+            const type = document.getElementById('cipher-type').value;
+            const keyInput = document.getElementById('cipher-key').value;
+            const input = document.getElementById('raw-text').value;
+            const keyLabel = document.getElementById('key-label');
+
+            let encrypted = "";
+            let decrypted = "";
+
+            if (type === "caesar") {
+                keyLabel.innerText = "Numeric Shift Value";
+                const shift = parseInt(keyInput) || 0;
+                encrypted = caesar(input, shift);
+                decrypted = caesar(encrypted, -shift);
+            } else {
+                keyLabel.innerText = "Secret Passphrase Key";
+                const keyStr = keyInput.replace(/[^A-Za-z]/g, "");
+                encrypted = vigenere(input, keyStr, true);
+                decrypted = vigenere(encrypted, keyStr, false);
+            }
+
+            document.getElementById('encrypted-text').value = encrypted;
+            document.getElementById('decrypted-text').value = decrypted;
+        }
+
+        function caesar(str, shift) {
+            // Normalise structural wrap indexes bound sizes cleanly
+            shift = ((shift % 26) + 26) % 26;
+            return str.split('').map(char => {
+                const code = char.charCodeAt(0);
+                if (code >= 65 && code <= 90) return String.fromCharCode(((code - 65 + shift) % 26) + 65);
+                if (code >= 97 && code <= 122) return String.fromCharCode(((code - 97 + shift) % 26) + 97);
+                return char;
+            }).join('');
+        }
+
+        function vigenere(str, key, encrypt) {
+            if (!key) return str;
+            let keyIdx = 0;
+            return str.split('').map(char => {
+                const code = char.charCodeAt(0);
+                let isUpper = code >= 65 && code <= 90;
+                let isLower = code >= 97 && code <= 122;
+                
+                if (isUpper || isLower) {
+                    const base = isUpper ? 65 : 97;
+                    const kCode = key[keyIdx % key.length].toLowerCase().charCodeAt(0) - 97;
+                    const shift = encrypt ? kCode : -kCode;
+                    keyIdx++;
+                    return String.fromCharCode((((code - base + shift) % 26) + 26) % 26 + base);
+                }
+                return char;
+            }).join('');
+        }
+        runCipher();
+    </script>
+</body>
+</html>

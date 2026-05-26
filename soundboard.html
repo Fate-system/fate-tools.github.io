@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ambient Soundboard</title>
+    <style>
+        body { background: #0f0f11; color: #e1e1e6; font-family: sans-serif; text-align: center; padding: 2rem; }
+        .back { display: inline-block; margin-bottom: 2rem; color: #72f1b8; text-decoration: none; }
+        .container { max-width: 500px; margin: 0 auto; background: #16161a; padding: 2rem; border-radius: 12px; border: 1px solid #2d2d34; }
+        .sound-row { display: flex; align-items: center; justify-content: space-between; margin: 1.5rem 0; background: #2d2d34; padding: 1rem; border-radius: 8px; }
+        .label { font-size: 1.2rem; font-weight: bold; width: 140px; text-align: left; }
+        button { background: #444; border: none; color: #fff; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: bold; width: 80px; transition: background 0.2s; }
+        button.playing { background: #72f1b8; color: #0f0f11; }
+
+        /* --- SMOOTH CUSTOM RANGE SLIDERS --- */
+        input[type=range] {
+            flex: 1;
+            margin: 0 1.2rem;
+            -webkit-appearance: none;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        /* The Slider Track (The line) */
+        input[type=range]::-webkit-slider-runnable-track {
+            background: #3d3d46;
+            height: 6px;
+            border-radius: 3px;
+            transition: background 0.2s ease;
+        }
+        input[type=range]:hover::-webkit-slider-runnable-track {
+            background: #4e4e59;
+        }
+
+        /* The Slider Knob/Lever */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: #72f1b8;
+            margin-top: -6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            transition: transform 0.1s ease, background 0.1s ease;
+        }
+        input[type=range]:active::-webkit-slider-thumb {
+            transform: scale(1.25);
+            background: #a2ffd6;
+        }
+
+        /* Firefox Support */
+        input[type=range]::-moz-range-thumb {
+            border: none;
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: #72f1b8;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            transition: transform 0.1s ease, background 0.1s ease;
+        }
+        input[type=range]:active::-moz-range-thumb {
+            transform: scale(1.25);
+            background: #a2ffd6;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back">← Back to Dashboard</a>
+    <div class="container">
+        <h2>🌧️ Local Ambient Mixer</h2>
+        <p style="color:#94a3b8; font-size:0.9rem;">Mix your self-hosted GitHub audio files seamlessly.</p>
+
+        <div class="sound-row">
+            <span class="label">🤫 White Noise</span>
+            <input type="range" id="vol-white" min="0" max="1" step="0.05" value="0" oninput="changeVol('white')">
+            <button id="btn-white" onclick="togglePlay('white', 'audio/white-noise.mp3')">Play</button>
+        </div>
+
+        <div class="sound-row">
+            <span class="label">🌧️ Heavy Rain</span>
+            <input type="range" id="vol-rain" min="0" max="1" step="0.05" value="0" oninput="changeVol('rain')">
+            <button id="btn-rain" onclick="togglePlay('rain', 'audio/rain.mp3')">Play</button>
+        </div>
+
+        <div class="sound-row">
+            <span class="label">🌊 Ocean Waves</span>
+            <input type="range" id="vol-waves" min="0" max="1" step="0.05" value="0" oninput="changeVol('waves')">
+            <button id="btn-waves" onclick="togglePlay('waves', 'audio/waves.mp3')">Play</button>
+        </div>
+    </div>
+
+    <script>
+        const audioPlayers = {};
+
+        function togglePlay(id, localPath) {
+            const btn = document.getElementById(`btn-${id}`);
+            
+            if (!audioPlayers[id]) {
+                audioPlayers[id] = new Audio(localPath);
+                audioPlayers[id].loop = true;
+                audioPlayers[id].volume = document.getElementById(`vol-${id}`).value;
+            }
+            
+            if (audioPlayers[id].paused) {
+                audioPlayers[id].play().catch(e => {
+                    console.error(e);
+                    alert(`Could not load "${localPath}". Make sure the file exists in your repository's audio folder!`);
+                });
+                btn.classList.add('playing');
+                btn.innerText = "Mute";
+            } else {
+                audioPlayers[id].pause();
+                btn.classList.remove('playing');
+                btn.innerText = "Play";
+            }
+        }
+
+        function changeVol(id) {
+            if (audioPlayers[id]) {
+                audioPlayers[id].volume = document.getElementById(`vol-${id}`).value;
+            }
+        }
+    </script>
+</body>
+</html>

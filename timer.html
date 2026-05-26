@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer & Stopwatch</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #f4f5f7; --surface: #ffffff; --text-main: #111215;
+            --text-muted: #5c6470; --orange-neon: #ff5500;
+            --pause-button: #9a9ca0; --start-button: #DCDFE5;
+            --border-tech: #dcdfe5; --font-scifi: 'Orbitron', sans-serif;
+        }
+
+        body { background-color: var(--bg); background-image: radial-gradient(var(--border-tech) 1px, transparent 1px); background-size: 20px 20px; color: var(--text-main); font-family: var(--font-scifi); max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; position: relative; }
+
+        .back-btn { position: absolute; top: 2.5rem; right: 2rem; background-color: var(--orange-neon); color: #ffffff; text-decoration: none; font-size: 0.85rem; font-weight: 700; padding: 0.6rem 1.8rem; clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%); transition: all 0.2s; z-index: 100; }
+
+        header { text-align: left; margin-bottom: 4rem; border-left: 3px solid var(--orange-neon); padding-left: 1.5rem; max-width: 70%; }
+        h1 { font-size: 2.2rem; font-weight: 900; margin: 0 0 0.5rem 0; color: var(--text-main); text-transform: uppercase; }
+
+        .container { max-width: 550px; margin: 2rem auto; background: var(--surface); border: 1px solid var(--border-tech); padding: 3rem; clip-path: polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%); }
+
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 2.5rem; padding: 0 1.5rem; }
+        .tab-btn { flex: 1; padding: 0.75rem; background: #e4e7eb; border: 1px solid var(--border-tech); color: var(--text-muted); font-family: var(--font-scifi); cursor: pointer; text-transform: uppercase; font-size: 0.85rem; clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%); }
+        .tab-btn.active { background: var(--text-main); color: #ffffff; }
+
+        .panel { display: none; padding: 0 1rem; }
+        .panel.active { display: block; }
+
+        .display { font-size: 3.8rem; font-family: var(--font-scifi); font-weight: 700; margin: 2rem 0; color: var(--text-main); text-align: center; text-shadow: 0 0 10px rgba(17, 18, 21, 0.15); }
+
+        .config-matrix { display: flex; justify-content: center; gap: 1rem; }
+        .config-cell { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: var(--text-muted); font-weight: 700; }
+        input[type="number"] { background: #ffffff; border: 1px solid var(--border-tech); color: var(--text-main); font-family: var(--font-scifi); padding: 0.5rem; width: 70px; text-align: center; font-size: 1.1rem; }
+
+        .ctrl-btn-start { background-color: var(--start-button); color: #ffffff; border: 1px solid var(--start-button); font-family: var(--font-scifi); font-size: 0.85rem; font-weight: 700; padding: 0.7rem 2rem; margin: 0.5rem; cursor: pointer; clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%); }
+        .ctrl-btn { background-color: var(--orange-neon); color: #ffffff; border: 1px solid var(--orange-neon); font-family: var(--font-scifi); font-size: 0.85rem; font-weight: 700; padding: 0.7rem 2rem; margin: 0.5rem; cursor: pointer; clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%); }
+        .ctrl-btn-pause { background-color: var(--pause-button); color: #ffffff; border: 1px solid var(--pause-button); font-family: var(--font-scifi); font-size: 0.85rem; font-weight: 700; padding: 0.7rem 2rem; margin: 0.5rem; cursor: pointer; clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%); }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-btn"><span>← DASHBOARD</span></a>
+
+    <header>
+        <h1>FATE_TOOL // UTIL_01</h1>
+        <p>MODULE: [ UTIL_01 ] // SYSTEM: READY</p>
+    </header>
+    
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" id="btn-timer-panel" onclick="switchTab('timer-panel')">Timer</button>
+            <button class="tab-btn" id="btn-stopwatch-panel" onclick="switchTab('stopwatch-panel')">Stopwatch</button>
+        </div>
+
+        <div id="timer-panel" class="panel active">
+            <h2>[ COUNTDOWN_TIMER ]</h2>
+            
+            <div class="config-matrix">
+                <div class="config-cell"> <input type="number" id="timer-hr" value="0" min="0" max="23"> <span>HR_VAL</span> </div>
+                <div class="config-cell"> <input type="number" id="timer-min" value="5" min="0" max="59"> <span>MIN_VAL</span> </div>
+                <div class="config-cell"> <input type="number" id="timer-sec" value="0" min="0" max="59"> <span>SEC_VAL</span> </div>
+            </div>
+
+            <div class="display" id="timer-display">00:05:00</div>
+
+            <button class="ctrl-btn-start" onclick="startTimer()">START</button>
+            <button class="ctrl-btn-pause" onclick="stopTimer()">PAUSE</button>
+            <button class="ctrl-btn" onclick="resetTimer()">RESET</button>
+        </div>
+
+        <div id="stopwatch-panel" class="panel">
+            <h2>[ RUNTIME_STOPWATCH ]</h2>
+            <div class="display" id="sw-display">00:00.00</div>
+            <button class="ctrl-btn-start" onclick="startStopwatch()">START</button>
+            <button class="ctrl-btn-pause" onclick="stopStopwatch()">STOP</button>
+            <button class="ctrl-btn" onclick="resetStopwatch()">RESET</button>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(panelId) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(panelId).classList.add('active');
+            document.getElementById('btn-' + panelId).classList.add('active');
+        }
+
+        // Web Audio Synth Engine
+        let audioCtx, alarmLoop;
+        let toggle = false;
+
+        function startAlarmLoop() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (alarmLoop) return; // Prevent multiple loops
+            
+            alarmLoop = setInterval(() => {
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                
+                toggle = !toggle;
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(toggle ? 880 : 660, audioCtx.currentTime);
+                
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.5);
+            }, 700);
+        }
+
+        function stopAlarmLoop() {
+            clearInterval(alarmLoop);
+            alarmLoop = null;
+        }
+
+        // Timer Logic
+        let timerInterval;
+        let timerSeconds = null; 
+
+        function getInputsInSeconds() {
+            return (parseInt(document.getElementById('timer-hr').value) || 0) * 3600 +
+                   (parseInt(document.getElementById('timer-min').value) || 0) * 60 +
+                   (parseInt(document.getElementById('timer-sec').value) || 0);
+        }
+
+        function updateTimerDisplay() {
+            let total = timerSeconds !== null ? timerSeconds : getInputsInSeconds();
+            let h = Math.floor(total / 3600).toString().padStart(2, '0');
+            let m = Math.floor((total % 3600) / 60).toString().padStart(2, '0');
+            let s = (total % 60).toString().padStart(2, '0');
+            document.getElementById('timer-display').innerText = `${h}:${m}:${s}`;
+        }
+
+        document.getElementById('timer-hr').addEventListener('input', updateTimerDisplay);
+        document.getElementById('timer-min').addEventListener('input', updateTimerDisplay);
+        document.getElementById('timer-sec').addEventListener('input', updateTimerDisplay);
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            if (timerSeconds === null) timerSeconds = getInputsInSeconds();
+            if (timerSeconds <= 0) return;
+
+            timerInterval = setInterval(() => {
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    startAlarmLoop(); 
+                } else {
+                    timerSeconds--;
+                    updateTimerDisplay();
+                }
+            }, 1000);
+        }
+
+        function stopTimer() { 
+            clearInterval(timerInterval); 
+            stopAlarmLoop(); // Alarm stops on pause
+        }
+
+        function resetTimer() { 
+            stopTimer(); 
+            timerSeconds = null; 
+            updateTimerDisplay(); 
+        }
+
+        // Stopwatch logic
+        let swInterval, swTime = 0;
+        function startStopwatch() { clearInterval(swInterval); let start = Date.now() - swTime; swInterval = setInterval(() => { swTime = Date.now() - start; let ms = Math.floor((swTime % 1000) / 10).toString().padStart(2, '0'); let s = Math.floor((swTime / 1000) % 60).toString().padStart(2, '0'); let m = Math.floor((swTime / 60000) % 60).toString().padStart(2, '0'); document.getElementById('sw-display').innerText = `${m}:${s}.${ms}`; }, 10); }
+        function stopStopwatch() { clearInterval(swInterval); }
+        function resetStopwatch() { stopStopwatch(); swTime = 0; document.getElementById('sw-display').innerText = "00:00.00"; }
+    </script>
+</body>
+</html>

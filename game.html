@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FATE_TOOL // GAME</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --bg: #f4f5f7; --surface: #ffffff; --text-main: #111215; --text-muted: #5c6470; 
+            --orange-neon: #ff5500; --orange-alpha: rgba(255, 85, 0, 0.08); 
+            --border-tech: #dcdfe5; --font-scifi: 'Orbitron', sans-serif; 
+        }
+
+        body { 
+            background-color: var(--bg); background-image: radial-gradient(var(--border-tech) 1px, transparent 1px); 
+            background-size: 20px 20px; color: var(--text-main); font-family: var(--font-scifi); 
+            max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; 
+        }
+
+        .ig-btn { 
+            position: absolute; top: 2.5rem; right: 2rem; background-color: var(--orange-neon); 
+            color: #ffffff; text-decoration: none; font-size: 0.85rem; font-weight: 700; 
+            padding: 0.6rem 1.8rem; clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%); z-index: 100; 
+        }
+
+        .back-btn { display: inline-block; margin-bottom: 2rem; color: var(--orange-neon); font-weight: 700; text-decoration: none; }
+        header { margin-bottom: 4rem; border-left: 3px solid var(--orange-neon); padding-left: 1.5rem; }
+        h1 { font-size: 2.2rem; font-weight: 900; text-transform: uppercase; margin: 0; }
+
+        /* FIXED GRID SYSTEM */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, 320px); 
+            justify-content: center; 
+            gap: 2.5rem 2rem; 
+            padding: 0 10px; 
+        }
+
+        .card { 
+            background: var(--surface); text-decoration: none; color: inherit; 
+            border: 1px solid var(--border-tech); width: 320px; 
+            display: flex; flex-direction: column; justify-content: space-between; 
+            clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%); 
+            transition: all 0.2s; 
+        }
+        .card:hover { transform: translateY(-5px); border-color: var(--orange-neon); box-shadow: 0 12px 24px var(--orange-alpha); }
+
+        .card-content { padding: 1.5rem 2.2rem 1rem 2.2rem; }
+        .card-meta { font-size: 0.75rem; color: var(--orange-neon); font-weight: 700; margin-bottom: 0.75rem; display: flex; justify-content: space-between; }
+        .card-footer { margin-top: 1.5rem; background-color: var(--orange-neon); color: #ffffff; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 2.5rem 0.85rem 2.2rem; }
+        .status-dot { width: 6px; height: 6px; background-color: rgba(255, 255, 255, 0.6); border-radius: 50%; }
+        .card:hover .status-dot { background-color: #ffffff; box-shadow: 0 0 8px #ffffff; }
+    </style>
+</head>
+<body>
+
+    <a href="https://www.instagram.com/snailwuww" target="_blank" class="ig-btn">[ CREATOR_IG ]</a>
+    <a href="index.html" class="back-btn">← BACK_TO_GATEWAY</a>
+
+    <header><h1>[ GAME_MODULES ]</h1></header>
+    
+    <main class="grid">
+        <a href="physics-sandbox.html" class="card">
+            <div class="card-content">
+                <div class="card-meta"><span>.&emsp;&emsp; [ SIM_01 ]</span></div>
+                <h3> &emsp;🌌 Solar Simulator</h3>
+            </div>
+            <div class="card-footer"><span>RUN_MODULE //</span><span class="status-dot"></span></div>
+        </a>
+    </main>
+
+</body>
+</html>

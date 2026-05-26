@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Solar simulator</title>
+    <style>
+        body { background: #0f0f11; color: #e1e1e6; font-family: sans-serif; text-align: center; margin: 0; padding: 2rem; overflow: hidden; }
+        .back { display: inline-block; margin-bottom: 1rem; color: #72f1b8; text-decoration: none; position: relative; z-index: 10; }
+        .controls { margin-bottom: 1rem; position: relative; z-index: 10; background: rgba(22, 22, 26, 0.8); padding: 0.75rem; border-radius: 8px; display: inline-flex; gap: 0.8rem; border: 1px solid #2d2d34; align-items: center; }
+        canvas { background: #050507; border: 2px solid #72f1b8; border-radius: 12px; display: block; margin: 0 auto; box-shadow: 0 0 30px rgba(114, 241, 184, 0.15); }
+        button { background: #2d2d34; border: 1px solid #444; color: #fff; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        button:hover { border-color: #72f1b8; color: #72f1b8; }
+        input[type="number"] { background: #16161a; border: 1px solid #444; color: #72f1b8; font-weight: bold; padding: 0.4rem; border-radius: 4px; width: 70px; text-align: center; }
+        label { font-size: 0.9rem; color: #94a3b8; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back">← Back to Dashboard</a><br>
+    
+    <div class="controls">
+        <label for="planetCount">Planets (Max 1000):</label>
+        <input type="number" id="planetCount" value="3" min="1" max="1000">
+        <button onclick="resetSimulation()">Spawn Chaos</button>
+        <button onclick="clearTrails()" style="background: #442d34; border-color: #55333a;">Clear Thick Trails</button>
+    </div>
+
+    <canvas id="sandbox"></canvas>
+
+    <script>
+        const canvas = document.getElementById('sandbox');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth * 0.45;  
+        canvas.height = window.innerHeight * 0.65;
+
+        const G = 4.0;             
+        let planets = [];
+        let globalTrails = []; 
+
+        class Body {
+            constructor(x, y, vx, vy, color) {
+                this.x = x;
+                this.y = y;
+                this.vx = vx;
+                this.vy = vy;
+                this.mass = 300; 
+                this.radius = 6; 
+                this.color = color;
+            }
+        }
+
+        function initSimulation() {
+            planets = [];
+            globalTrails = []; 
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            
+            // Enforce the 1,000 max limit straight from the input box
+            let count = parseInt(document.getElementById('planetCount').value) || 3;
+            if (count > 1000) {
+                count = 1000;
+                document.getElementById('planetCount').value = 1000;
+            }
+
+            for (let i = 0; i < count; i++) {
+                const startX = cx + (Math.random() - 0.5) * (canvas.width * 0.6);
+                const startY = cy + (Math.random() - 0.5) * (canvas.height * 0.5);
+                
+                const vx = (Math.random() - 0.5) * 6;
+                const vy = (Math.random() - 0.5) * 6;
+                
+                const color = `hsl(${Math.random() * 360}, 95%, 65%)`;
+                planets.push(new Body(startX, startY, vx, vy, color));
+            }
+        }
+
+        function resetSimulation() { initSimulation(); }
+        function clearTrails() { globalTrails = []; }
+
+        function updatePhysics() {
+            for (let i = 0; i < planets.length; i++) {
+                for (let j = 0; j < planets.length; j++) {
+                    if (i === j) continue;
+
+                    let dx = planets[j].x - planets[i].x;
+                    let dy = planets[j].y - planets[i].y;
+
+                    if (dx > canvas.width / 2) dx -= canvas.width;
+                    if (dx < -canvas.width / 2) dx += canvas.width;
+                    if (dy > canvas.height / 2) dy -= canvas.height;
+                    if (dy < -canvas.height / 2) dy += canvas.height;
+                    
+                    const distSq = dx * dx + dy * dy;
+                    const dist = Math.sqrt(distSq) || 0.1;
+
+                    const force = (G * planets[i].mass * planets[j].mass) / (distSq + 450);
+                    
+                    planets[i].vx += (force * (dx / dist)) / planets[i].mass;
+                    planets[i].vy += (force * (dy / dist)) / planets[i].mass;
+                }
+            }
+
+            planets.forEach(p => {
+                globalTrails.push({ x: p.x, y: p.y, color: p.color });
+
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0) p.x += canvas.width;
+                if (p.x > canvas.width) p.x -= canvas.width;
+                if (p.y < 0) p.y += canvas.height;
+                if (p.y > canvas.height) p.y -= canvas.height;
+            });
+
+            // Keeps performance perfectly crisp by capping memory trails
+            if (globalTrails.length > 15000) {
+                globalTrails.splice(0, planets.length);
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Back to your preferred thick trail rendering loop
+            globalTrails.forEach(t => {
+                ctx.fillStyle = t.color;
+                ctx.globalAlpha = 0.55; 
+                ctx.fillRect(t.x - 2, t.y - 2, 4, 4); 
+            });
+            ctx.globalAlpha = 1.0; 
+
+            planets.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.shadowBlur = 14;
+                ctx.shadowColor = p.color;
+                ctx.fill();
+                ctx.closePath();
+                ctx.shadowBlur = 0;
+            });
+        }
+
+        function loop() {
+            updatePhysics();
+            draw();
+            requestAnimationFrame(loop);
+        }
+
+        initSimulation();
+        loop();
+    </script>
+</body>
+</html>
