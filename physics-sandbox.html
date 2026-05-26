@@ -3,37 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Solar simulator</title>
+    <title>FATE_TOOL // SOLAR_SIMULATOR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    
     <style>
-        body { background: #0f0f11; color: #e1e1e6; font-family: sans-serif; text-align: center; margin: 0; padding: 2rem; overflow: hidden; }
-        .back { display: inline-block; margin-bottom: 1rem; color: #72f1b8; text-decoration: none; position: relative; z-index: 10; }
-        .controls { margin-bottom: 1rem; position: relative; z-index: 10; background: rgba(22, 22, 26, 0.8); padding: 0.75rem; border-radius: 8px; display: inline-flex; gap: 0.8rem; border: 1px solid #2d2d34; align-items: center; }
-        canvas { background: #050507; border: 2px solid #72f1b8; border-radius: 12px; display: block; margin: 0 auto; box-shadow: 0 0 30px rgba(114, 241, 184, 0.15); }
-        button { background: #2d2d34; border: 1px solid #444; color: #fff; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        button:hover { border-color: #72f1b8; color: #72f1b8; }
-        input[type="number"] { background: #16161a; border: 1px solid #444; color: #72f1b8; font-weight: bold; padding: 0.4rem; border-radius: 4px; width: 70px; text-align: center; }
-        label { font-size: 0.9rem; color: #94a3b8; font-weight: bold; }
+        :root {
+            --bg: #f4f5f7; 
+            --surface: #ffffff; 
+            --text-main: #111215;
+            --text-muted: #5c6470; 
+            --orange-neon: #ff5500;
+            --ct-btn:#DCDFE5;
+            --border-tech: #dcdfe5; 
+            --font-scifi: 'Orbitron', sans-serif;
+        }
+
+        body { 
+            background-color: var(--bg); 
+            background-image: radial-gradient(var(--border-tech) 1px, transparent 1px); 
+            background-size: 20px 20px; 
+            color: var(--text-main); 
+            font-family: var(--font-scifi); 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 3rem 2rem; 
+        }
+
+        .back-btn { 
+            position: absolute; 
+            top: 2.5rem; 
+            right: 2rem; 
+            background-color: var(--orange-neon); 
+            color: #ffffff; 
+            text-decoration: none; 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            padding: 0.6rem 1.8rem; 
+            clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%); 
+        }
+
+        header { 
+            text-align: left; 
+            margin-bottom: 3rem; 
+            border-left: 3px solid var(--orange-neon); 
+            padding-left: 1.5rem; 
+        }
+        
+        h1 { 
+            font-size: 2.2rem; 
+            font-weight: 900; 
+            margin: 0; 
+            text-transform: uppercase; 
+        }
+
+        .container { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            background: var(--surface); 
+            border: 1px solid var(--border-tech); 
+            padding: 2rem; 
+            clip-path: polygon(3% 0%, 100% 0%, 97% 100%, 0% 100%); 
+            text-align: center; 
+        }
+
+        .controls { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            gap: 1.5rem; 
+            margin-bottom: 2rem; 
+            flex-wrap: wrap;
+        }
+
+        .config-cell { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            font-size: 0.75rem; 
+            color: var(--text-muted); 
+            font-weight: 700; 
+        }
+
+        input[type="number"] { 
+            background: #ffffff; 
+            border: 1px solid var(--border-tech); 
+            color: var(--text-main); 
+            font-family: var(--font-scifi); 
+            padding: 0.5rem; 
+            width: 90px; 
+            text-align: center; 
+            font-size: 1.1rem; 
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .ctrl-btn { 
+            background-color: var(--text-main); 
+            color: #ffffff; 
+            border: 1px solid var(--text-main); 
+            font-family: var(--font-scifi); 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            padding: 0.8rem 1.8rem; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%); 
+        }
+        
+        .ctrl-btn:hover { 
+            background-color: var(--orange-neon); 
+            border-color: var(--orange-neon); 
+        }
+
+        .ctrl-btn.secondary {
+            background-color: var(--ct-btn);
+            color: var(--text-muted);
+            border: 1px solid var(--border-tech);
+        }
+
+        .ctrl-btn.secondary:hover {
+            color: #ffffff;
+            background-color: var(--text-muted);
+            border-color: var(--text-muted);
+        }
+
+        .canvas-wrapper {
+            background: #050507; /* Dark viewport maintained for space contrast */
+            border: 1px solid var(--border-tech);
+            padding: 5px;
+            display: inline-block;
+            margin: 0 auto;
+        }
+
+        canvas { 
+            background: #050507; 
+            display: block; 
+        }
     </style>
 </head>
 <body>
 
-    <a href="index.html" class="back">← Back to Dashboard</a><br>
-    
-    <div class="controls">
-        <label for="planetCount">Planets (Max 1000):</label>
-        <input type="number" id="planetCount" value="3" min="1" max="1000">
-        <button onclick="resetSimulation()">Spawn Chaos</button>
-        <button onclick="clearTrails()" style="background: #442d34; border-color: #55333a;">Clear Thick Trails</button>
-    </div>
+    <a href="index.html" class="back-btn"><span>← DASHBOARD</span></a>
 
-    <canvas id="sandbox"></canvas>
+    <header>
+        <h1>ORBIT_MATRIX // SOLAR_SIMULATOR</h1>
+        <p>MODULE: GRAVITATIONAL_CHAOS_ENGINE // SYSTEM: ACTIVE</p>
+    </header>
+    
+    <div class="container">
+        <div class="controls">
+            <div class="config-cell">
+                <input type="number" id="planetCount" value="3" min="1" max="1000">
+                <span>PLANETS_MAX_1000</span>
+            </div>
+            <button class="ctrl-btn" onclick="resetSimulation()">SPAWN_CHAOS</button>
+            <button class="ctrl-btn secondary" onclick="clearTrails()">CLEAR_TRACKING_TRAILS</button>
+        </div>
+
+        <div class="canvas-wrapper">
+            <canvas id="sandbox"></canvas>
+        </div>
+    </div>
 
     <script>
         const canvas = document.getElementById('sandbox');
         const ctx = canvas.getContext('2d');
 
-        canvas.width = window.innerWidth * 0.45;  
-        canvas.height = window.innerHeight * 0.65;
+        canvas.width = window.innerWidth * 0.65;  
+        canvas.height = window.innerHeight * 0.55;
 
         const G = 4.0;             
         let planets = [];
@@ -57,7 +194,6 @@
             const cx = canvas.width / 2;
             const cy = canvas.height / 2;
             
-            // Enforce the 1,000 max limit straight from the input box
             let count = parseInt(document.getElementById('planetCount').value) || 3;
             if (count > 1000) {
                 count = 1000;
@@ -114,7 +250,6 @@
                 if (p.y > canvas.height) p.y -= canvas.height;
             });
 
-            // Keeps performance perfectly crisp by capping memory trails
             if (globalTrails.length > 15000) {
                 globalTrails.splice(0, planets.length);
             }
@@ -123,7 +258,6 @@
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Back to your preferred thick trail rendering loop
             globalTrails.forEach(t => {
                 ctx.fillStyle = t.color;
                 ctx.globalAlpha = 0.55; 
