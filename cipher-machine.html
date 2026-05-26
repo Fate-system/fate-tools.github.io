@@ -3,44 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cipher Machine</title>
+    <title>CYPHER_MATRIX // ENGINE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    
     <style>
-        body { background: #0f0f11; color: #e1e1e6; font-family: sans-serif; text-align: center; padding: 2rem; }
-        .back { display: inline-block; margin-bottom: 2rem; color: #72f1b8; text-decoration: none; }
-        .container { max-width: 550px; margin: 0 auto; background: #16161a; padding: 2rem; border-radius: 12px; border: 1px solid #2d2d34; text-align: left; }
-        select, input[type=text], textarea { width: 100%; background: #2d2d34; border: 1px solid #444; color: #fff; padding: 0.6rem; border-radius: 6px; box-sizing: border-box; font-size: 1rem; margin-top: 0.5rem; margin-bottom: 1.2rem; }
-        textarea { height: 100px; resize: vertical; }
-        .flex-row { display: flex; gap: 1rem; }
-        .flex-child { flex: 1; }
-        h3 { margin-bottom: 0.25rem; margin-top: 0; color: #fff; }
+        :root {
+            --bg: #f4f5f7; 
+            --surface: #ffffff; 
+            --text-main: #111215;
+            --text-muted: #5c6470; 
+            --orange-neon: #ff5500;
+            --border-tech: #dcdfe5; 
+            --font-scifi: 'Orbitron', sans-serif;
+        }
+
+        body { 
+            background-color: var(--bg); 
+            background-image: radial-gradient(var(--border-tech) 1px, transparent 1px); 
+            background-size: 20px 20px; 
+            color: var(--text-main); 
+            font-family: var(--font-scifi); 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 3rem 2rem; 
+        }
+
+        .back-btn { 
+            position: absolute; 
+            top: 2.5rem; 
+            right: 2rem; 
+            background-color: var(--orange-neon); 
+            color: #ffffff; 
+            text-decoration: none; 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            padding: 0.6rem 1.8rem; 
+            clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%); 
+        }
+
+        header { 
+            text-align: left; 
+            margin-bottom: 4rem; 
+            border-left: 3px solid var(--orange-neon); 
+            padding-left: 1.5rem; 
+        }
+        
+        h1 { 
+            font-size: 2.2rem; 
+            font-weight: 900; 
+            margin: 0; 
+            text-transform: uppercase; 
+        }
+
+        .container { 
+            max-width: 600px; 
+            margin: 2rem auto; 
+            background: var(--surface); 
+            border: 1px solid var(--border-tech); 
+            padding: 3rem; 
+            clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%); 
+            text-align: left; 
+        }
+
+        h2 { 
+            font-size: 1.3rem; 
+            font-weight: 900; 
+            margin: 0 0 0.5rem 0; 
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .sub-terminal {
+            color: var(--text-muted); 
+            font-size: 0.75rem; 
+            margin-bottom: 2rem; 
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .flex-row { 
+            display: flex; 
+            gap: 1.5rem; 
+            margin-bottom: 1.5rem;
+        }
+        
+        .flex-child { 
+            flex: 1; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.75rem; 
+            color: var(--text-muted); 
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+
+        select, input[type="text"], textarea { 
+            width: 100%; 
+            background: #ffffff; 
+            border: 1px solid var(--border-tech); 
+            color: var(--text-main); 
+            font-family: var(--font-scifi); 
+            padding: 0.75rem; 
+            box-sizing: border-box; 
+            font-size: 1rem; 
+            font-weight: 700;
+        }
+
+        select {
+            cursor: pointer;
+            border-radius: 0;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: linear-gradient(45deg, transparent 50%, var(--text-main) 50%), linear-gradient(135deg, var(--text-main) 50%, transparent 50%);
+            background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px);
+            background-size: 5px 5px, 5px 5px;
+            background-repeat: no-repeat;
+        }
+
+        textarea { 
+            height: 90px; 
+            resize: vertical; 
+            font-family: monospace; /* Preserves crisp crypto string scanning */
+            font-size: 1.05rem;
+            margin-bottom: 1.5rem;
+        }
+
+        textarea[readonly] {
+            background: var(--bg);
+            color: var(--text-muted);
+            border-style: dashed;
+        }
+
+        h3 { 
+            font-size: 0.75rem;
+            font-weight: 900;
+            margin-bottom: 0.4rem; 
+            margin-top: 0; 
+            color: var(--orange-neon); 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
 <body>
-   <a href="index.html" class="back-btn"><span>← DASHBOARD</span></a>
+
+    <a href="crypt.html" class="back-btn"><span>← BACK</span></a>
+
+    <header>
+        <h1>CYPHER_MATRIX // ENGINE</h1>
+        <p>MODULE: CRYPTOGRAPHIC_ALGORITHM_SUITE // SYSTEM: READY</p>
+    </header>
+    
     <div class="container">
-        <h2 style="text-align: center; margin-top: 0;">🔒 Caesar & Vigenère Cipher Engine</h2>
+        <h2>[ ENCRYPTION_MATRIX ]</h2>
+        <div class="sub-terminal">LOCAL_PARSING_NODE // REALTIME_OUTPUT</div>
         
         <div class="flex-row">
             <div class="flex-child">
-                <label>Select Cipher Algorithm</label>
+                <label>SELECT_ALGORITHM</label>
                 <select id="cipher-type" onchange="runCipher()">
-                    <option value="caesar">Caesar Shift</option>
-                    <option value="vigenere">Vigenère Cipher</option>
+                    <option value="caesar">CAESAR SHIFT</option>
+                    <option value="vigenere">VIGENÈRE CIPHER</option>
                 </select>
             </div>
             <div class="flex-child">
-                <label id="key-label">Numeric Shift Value</label>
+                <label id="key-label">NUMERIC_SHIFT_VALUE</label>
                 <input type="text" id="cipher-key" value="3" oninput="runCipher()">
             </div>
         </div>
 
-        <label>Input Text String</label>
+        <label>INPUT_TEXT_STRING</label>
         <textarea id="raw-text" placeholder="Type secret message here..." oninput="runCipher()"></textarea>
 
-        <h3>Resulting Encrypted Output:</h3>
+        <h3>RESULTING_ENCRYPTED_OUTPUT //</h3>
         <textarea id="encrypted-text" readonly placeholder="Encrypted outcome will output here..."></textarea>
         
-        <h3>Decrypted Verification Output:</h3>
+        <h3>DECRYPTED_VERIFICATION_OUTPUT //</h3>
         <textarea id="decrypted-text" readonly placeholder="Reverse parsed outcome calculation..."></textarea>
     </div>
 
@@ -55,12 +197,12 @@
             let decrypted = "";
 
             if (type === "caesar") {
-                keyLabel.innerText = "Numeric Shift Value";
+                keyLabel.innerText = "NUMERIC_SHIFT_VALUE";
                 const shift = parseInt(keyInput) || 0;
                 encrypted = caesar(input, shift);
                 decrypted = caesar(encrypted, -shift);
             } else {
-                keyLabel.innerText = "Secret Passphrase Key";
+                keyLabel.innerText = "SECRET_PASSPHRASE_KEY";
                 const keyStr = keyInput.replace(/[^A-Za-z]/g, "");
                 encrypted = vigenere(input, keyStr, true);
                 decrypted = vigenere(encrypted, keyStr, false);
@@ -71,7 +213,6 @@
         }
 
         function caesar(str, shift) {
-            // Normalise structural wrap indexes bound sizes cleanly
             shift = ((shift % 26) + 26) % 26;
             return str.split('').map(char => {
                 const code = char.charCodeAt(0);
@@ -99,6 +240,8 @@
                 return char;
             }).join('');
         }
+        
+        // Initial setup run
         runCipher();
     </script>
 </body>
