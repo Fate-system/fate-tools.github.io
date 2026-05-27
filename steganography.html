@@ -3,23 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Steganography Image Hider</title>
+    <title>FATE_TOOL // STEGANOGRAPHY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    
     <style>
-        body { background: #0f0f11; color: #e1e1e6; font-family: sans-serif; text-align: center; padding: 2rem; }
-        .back { display: inline-block; margin-bottom: 2rem; color: #72f1b8; text-decoration: none; }
-        .container { max-width: 600px; margin: 0 auto; background: #16161a; padding: 2rem; border-radius: 12px; border: 1px solid #2d2d34; text-align: left; }
-        input[type=file], textarea { width: 100%; background: #2d2d34; border: 1px solid #444; color: #fff; padding: 0.6rem; border-radius: 6px; box-sizing: border-box; margin-top: 0.5rem; margin-bottom: 1.2rem; }
-        textarea { height: 80px; }
-        button { background: #72f1b8; color: #0f0f11; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1rem; margin-bottom: 1rem; }
-        button:hover { background: #a2ffd6; }
-        .preview-box { text-align: center; background: #0f0f11; padding: 1rem; border-radius: 8px; border: 1px dashed #444; display: none; }
-        img { max-width: 100%; max-height: 250px; border-radius: 4px; margin-top: 0.5rem; }
+        :root {
+            --bg: #f4f5f7; 
+            --surface: #ffffff; 
+            --text-main: #111215;
+            --text-muted: #5c6470; 
+            --orange-neon: #ff5500;
+            --border-tech: #dcdfe5; 
+            --font-scifi: 'Orbitron', sans-serif;
+        }
+
+        body { 
+            background-color: var(--bg); 
+            background-image: radial-gradient(var(--border-tech) 1px, transparent 1px); 
+            background-size: 20px 20px; 
+            color: var(--text-main); 
+            font-family: var(--font-scifi); 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 3rem 2rem; 
+        }
+
+        .back-btn { 
+            position: absolute; 
+            top: 2.5rem; 
+            right: 2rem; 
+            background-color: var(--orange-neon); 
+            color: #ffffff; 
+            text-decoration: none; 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            padding: 0.6rem 1.8rem; 
+            clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%); 
+        }
+
+        header { 
+            text-align: left; 
+            margin-bottom: 4rem; 
+            border-left: 3px solid var(--orange-neon); 
+            padding-left: 1.5rem; 
+        }
+        
+        h1 { 
+            font-size: 2.2rem; 
+            font-weight: 900; 
+            margin: 0; 
+            text-transform: uppercase; 
+        }
+
+        .container { 
+            max-width: 600px; 
+            margin: 2rem auto; 
+            background: var(--surface); 
+            border: 1px solid var(--border-tech); 
+            padding: 3rem; 
+            clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%); 
+            text-align: left; 
+        }
+
+        h2 { 
+            font-size: 1.3rem; 
+            font-weight: 900; 
+            margin: 0 0 0.5rem 0; 
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .sub-terminal {
+            color: var(--text-muted); 
+            font-size: 0.75rem; 
+            margin-bottom: 2rem; 
+            text-align: center;
+            font-weight: 700;
+        }
+
+        label {
+            font-size: 0.75rem; 
+            color: var(--text-muted); 
+            font-weight: 700;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid var(--border-tech);
+            color: var(--text-main);
+            font-family: var(--font-scifi);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.6rem;
+            box-sizing: border-box;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Standard custom system file loader text styling hints */
+        input[type="file"]::file-selector-button {
+            background: var(--text-main);
+            color: #ffffff;
+            border: none;
+            font-family: var(--font-scifi);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.4rem 1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            margin-right: 1rem;
+        }
+        input[type="file"]::file-selector-button:hover {
+            background: var(--orange-neon);
+        }
+
+        textarea { 
+            width: 100%; 
+            background: #ffffff; 
+            border: 1px solid var(--border-tech); 
+            color: var(--text-main); 
+            font-family: var(--font-scifi); 
+            padding: 0.75rem; 
+            box-sizing: border-box; 
+            font-size: 1rem; 
+            font-weight: 700;
+            height: 80px;
+            resize: vertical;
+            margin-bottom: 1.5rem;
+        }
+
+        .ctrl-btn { 
+            background-color: var(--text-main); 
+            color: #ffffff; 
+            border: 1px solid var(--text-main); 
+            font-family: var(--font-scifi); 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            padding: 1rem 2rem; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            width: 100%; 
+            clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%); 
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        
+        .ctrl-btn:hover { 
+            background-color: var(--orange-neon); 
+            border-color: var(--orange-neon); 
+        }
+
+        .ctrl-btn.secondary {
+            background-color: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-tech);
+        }
+
+        .ctrl-btn.secondary:hover {
+            color: #ffffff;
+            background-color: var(--text-muted);
+            border-color: var(--text-muted);
+        }
+
+        .preview-box { 
+            text-align: center; 
+            background: var(--bg); 
+            padding: 1.5rem; 
+            border: 1px dashed var(--border-tech); 
+            margin: 1.5rem 0;
+            display: none; 
+            clip-path: polygon(3% 0%, 100% 0%, 97% 100%, 0% 100%);
+        }
+
+        .preview-box h4 {
+            font-size: 0.9rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin: 0 0 0.25rem 0;
+        }
+
+        .preview-box p {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin: 0 0 1rem 0;
+        }
+
+        .img-viewport {
+            background: #050507; /* Dark viewport frame for asset isolation contrast */
+            border: 1px solid var(--border-tech);
+            padding: 5px;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        img { 
+            max-width: 100%; 
+            max-height: 250px; 
+            display: block;
+        }
+
+        .tech-divider {
+            border: 0; 
+            border-top: 1px solid var(--border-tech); 
+            margin: 2rem 0;
+        }
     </style>
 </head>
 <body>
-    <a href="cypher.html" class="back">← Back</a>
+
+    <a href="crypt.html" class="back-btn"><span>← BACK</span></a>
+
+    <header>
+        <h1>FATE_TOOL // STEGANOGRAPHY</h1>
+        <p>MODULE: LSB_STEGANOGRAPHY_STUDIO // SYSTEM: READY</p>
+    </header>
+    
     <div class="container">
-        <h2 style="text-align: center; margin-top: 0;">🔑 Image Steganography Studio</h2>
+        <h2>[ PIXEL_CONCEALMENT ]</h2>
+        <div class="sub-terminal">ENCODE_DECODE_UTILITY // OFFLINE_PROCESSING</div>
         
         <label>1. Select Host Base Image File</label>
         <input type="file" id="image-loader" accept="image/*" onchange="loadImage(event)">
@@ -27,17 +232,23 @@
         <label>2. Text Message to Conceal inside Image Matrix</label>
         <textarea id="secret-msg" placeholder="Type payload text sequence to hide..."></textarea>
         
-        <button onclick="encodeMessage()">Encode Secret Text into Pixels</button>
+        <button class="ctrl-btn" onclick="encodeMessage()">Encode Secret Text into Pixels</button>
 
         <div class="preview-box" id="preview-area">
-            <h4 style="margin:0;">Output Processed Asset Created!</h4>
-            <p style="color:#94a3b8; font-size:0.8rem; margin:4px 0 12px 0;">Right-click below to save image or download it using button.</p>
-            <a id="download-link" download="encoded-secret.png"><button style="width:auto; padding: 0.4rem 1rem; font-size:0.85rem;">Download PNG</button></a><br>
-            <img id="output-img">
+            <h4>Output Processed Asset Created!</h4>
+            <p>Right-click viewport below to save or use tracking download node.</p>
+            <a id="download-link" download="encoded-secret.png" style="text-decoration: none;">
+                <button class="ctrl-btn" style="width: auto; padding: 0.5rem 1.5rem; font-size: 0.75rem; margin-bottom: 0;">Download PNG</button>
+            </a>
+            <br>
+            <div class="img-viewport">
+                <img id="output-img">
+            </div>
         </div>
 
-        <hr style="border: 0; border-top: 1px solid #2d2d34; margin: 2rem 0;">
-        <button style="background: #2d2d34; color: #fff; border: 1px solid #444;" onclick="decodeMessage()">Read Secret Content From Uploaded Image File</button>
+        <div class="tech-divider"></div>
+        
+        <button class="ctrl-btn secondary" onclick="decodeMessage()">Read Secret Content From Uploaded Image File</button>
     </div>
 
     <script>
@@ -61,38 +272,33 @@
         }
 
         function encodeMessage() {
-            if (!baseImageLoaded) return alert("Please upload an image first!");
+            if (!baseImageLoaded) return alert("ERR: Please upload a host image sequence first!");
             const msg = document.getElementById('secret-msg').value;
-            if (!msg) return alert("Type a message to hide first!");
+            if (!msg) return alert("ERR: Target plaintext payload missing!");
 
-            // Draw clean fresh copy of image state back to memory buffer context
-            ctx.clearRect(0,0,imgCanvas.width, imgCanvas.height);
+            ctx.clearRect(0, 0, imgCanvas.width, imgCanvas.height);
             ctx.drawImage(loadedImgElement, 0, 0);
 
             let imgData = ctx.getImageData(0, 0, imgCanvas.width, imgCanvas.height);
             let data = imgData.data;
 
-            // Turn text payload into absolute bin string ending inside a null byte terminal delimiter
             let binMsg = "";
             for (let i = 0; i < msg.length; i++) {
                 let bin = msg.charCodeAt(i).toString(2).padStart(8, '0');
                 binMsg += bin;
             }
-            binMsg += "00000000"; // Null character terminal tag
+            binMsg += "00000000"; // Null terminal byte sequence
 
             if (binMsg.length > data.length * 0.75) {
-                return alert("Message size exceeds image threshold limits! Use a bigger image file.");
+                return alert("ERR: Payload size exceeds current image matrix threshold limits!");
             }
 
-            // Injects bits sequentially into the Least Significant Bit (LSB) of each pixel color channel
             for (let i = 0; i < binMsg.length; i++) {
-                // Clear the last bit (mask out LSB) and add our message bit
                 data[i] = (data[i] & 0xFE) | parseInt(binMsg[i]);
             }
 
             ctx.putImageData(imgData, 0, 0);
 
-            // Output asset extraction rendering hooks
             const dataUrl = imgCanvas.toDataURL('image/png');
             document.getElementById('output-img').src = dataUrl;
             document.getElementById('download-link').href = dataUrl;
@@ -100,9 +306,8 @@
         }
 
         function decodeMessage() {
-            if (!baseImageLoaded) return alert("Please upload an encoded image using step 1 file prompt!");
+            if (!baseImageLoaded) return alert("ERR: No encoded resource detected in data layer. Complete step 1.");
             
-            // Re-read current canvas context pixel fields
             let imgData = ctx.getImageData(0, 0, imgCanvas.width, imgCanvas.height);
             let data = imgData.data;
 
@@ -110,19 +315,18 @@
             let decodedText = "";
 
             for (let i = 0; i < data.length; i++) {
-                // Extract the lowest bit from the byte
                 binMsg += (data[i] & 1).toString();
 
                 if (binMsg.length === 8) {
                     let byteVal = parseInt(binMsg, 2);
-                    if (byteVal === 0) break; // Break loop when null terminal character flag found
+                    if (byteVal === 0) break; // Terminate decoding safely at null indicator
                     decodedText += String.fromCharCode(byteVal);
-                    binMsg = ""; // Flush buffer array string
+                    binMsg = ""; 
                 }
             }
 
-            if(decodedText.trim() === "") alert("No hidden messages found matching format syntax parameters inside pixel profiles.");
-            else alert("Extracted Hidden Message:\n\n" + decodedText);
+            if(decodedText.trim() === "") alert("NOTICE: Zero parsed signature matches found within the LSB array layout.");
+            else alert("EXTRACTED_DATA_STREAM:\n\n" + decodedText);
         }
     </script>
 </body>
